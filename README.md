@@ -77,19 +77,12 @@ Once it's running, open **http://127.0.0.1:5000** in your browser.
 > (percentiles/thresholds — no molecule structures), so the calibrated features work out of the box.
 > The underlying PROTAC-DB dataset is **not** redistributed here — see [data/NOTICE.md](data/NOTICE.md).
 
-## Deploy a public version (Render)
+## Live demo
 
-`http://127.0.0.1:5000` only works on *your* machine while the server is running. To get a link that
-works for anyone, deploy the app to a Python host. This repo is preconfigured for **Render** (free tier)
-via [`render.yaml`](render.yaml):
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/joecampdb/PROTACselect)
-
-Or manually: **render.com → New + → Blueprint → connect this repo → Apply**. Render reads `render.yaml`
-(`gunicorn` start command, Python 3.12), builds, and serves the app at a public URL such as
-`https://protacselect.onrender.com`.
-
-> Free-tier services sleep after inactivity, so the first visit after idle takes ~30–60 s to wake.
+PROTACselect runs as a local web app — follow [Quick start](#quick-start) to launch it (any machine,
+~2 minutes). Anyone who clones the repo can run it on their own machine the same way. There's no
+always-on public URL (that would need a hosted server); to see what the tool produces **without
+installing anything**, look at the figures above and the [preprint](report/PROTACselect_preprint.pdf).
 
 ## Repository layout
 
