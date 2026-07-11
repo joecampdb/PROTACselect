@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use PROTACselect, please cite it as below."
+title: "PROTACselect: calibrated physicochemical triage and combinatorial exploration of PROTAC design space"
+abstract: >-
+  An interactive suite that assembles warhead x linker x E3-ligand PROTACs, renders them in 3D, and
+  scores ten physicochemical descriptors against problem-domain objective functions, with thresholds
+  calibrated to the distribution of published degraders. A developability-triage and design-exploration
+  tool for the chemistry half of degrader design; it does not predict degradation or therapeutic efficacy.
+type: software
+authors:
+  - given-names: "J."
+    family-names: "C."
+    email: joecamxtc@gmail.com
+keywords:
+  - PROTAC
+  - targeted protein degradation
+  - cheminformatics
+  - beyond-Rule-of-5
+  - design-space exploration
+license: MIT
+date-released: "2026-07-10"

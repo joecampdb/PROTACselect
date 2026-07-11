@@ -1,0 +1,24 @@
+# --- Python virtual environments ---
+.venv/
+venv/
+env/
+*.pyc
+__pycache__/
+
+# --- LICENSE-RESTRICTED raw dataset (do NOT publish) ---
+# The raw PROTAC-DB SMILES are not redistributed. Regenerate locally.
+# See data/NOTICE.md.
+data/*.smi
+data/*.xlsx
+data/*.csv
+
+# NOTE: engine/calibration.json and engine/distribution.json ARE committed on
+# purpose — they are aggregate statistics (percentiles/thresholds only, no
+# molecule structures) so the calibrated features work out of the box.
+
+# --- scratch / OS / editor ---
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

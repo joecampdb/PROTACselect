@@ -1,0 +1,12 @@
+# --- runtime (the app) ---
+rdkit>=2024.3
+flask>=3.0
+numpy>=1.24
+
+# --- optional: regenerate figures + preprint (report/) ---
+# matplotlib>=3.8
+# reportlab>=4.0
+# pillow>=10.0
+
+# --- optional: re-parse a PROTAC-DB .xlsx into data/protac_smiles.smi ---
+# openpyxl>=3.1

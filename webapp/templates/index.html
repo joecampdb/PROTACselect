@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROTACselect — Degrader Studio</title>
+  <script src="{{ url_for('static', filename='3Dmol-min.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="12" cy="7"  r="1.7" fill="currentColor"/>
+        <circle cx="12" cy="17" r="1.7" fill="currentColor"/>
+        <circle cx="5.6" cy="10.5" r="1.7" fill="currentColor"/>
+        <circle cx="18.4" cy="10.5" r="1.7" fill="currentColor"/>
+      </svg>
+      <div class="brand-txt">
+        <span class="brand-name">PROTACselect</span>
+        <span class="brand-sub">Degrader Studio · Tier‑1</span>
+      </div>
+    </div>
+
+    <div class="domain-wrap">
+      <label for="domain">Problem domain</label>
+      <select id="domain" class="domain-select"></select>
+    </div>
+
+    <div class="verdict" id="verdict">
+      <span class="verdict-dot" id="verdict-dot"></span>
+      <span class="verdict-txt" id="verdict-txt">—</span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- LEFT: component slots -->
+    <section class="panel slots">
+      <h2 class="panel-h">Components</h2>
+
+      <div class="slot" data-slot="warhead">
+        <div class="slot-top"><span class="slot-tag warhead">Warhead</span><span class="slot-meta" id="meta-warhead"></span></div>
+        <select id="warhead" class="slot-select"></select>
+      </div>
+
+      <div class="slot" data-slot="linker">
+        <div class="slot-top"><span class="slot-tag linker">Linker</span><span class="slot-meta" id="meta-linker"></span></div>
+        <select id="linker" class="slot-select"></select>
+      </div>
+
+      <div class="slot" data-slot="e3">
+        <div class="slot-top"><span class="slot-tag e3">E3 ligand</span><span class="slot-meta" id="meta-e3"></span></div>
+        <select id="e3" class="slot-select"></select>
+      </div>
+
+      <button id="explore-btn" class="explore-btn">⚡ Rank all 100 combos</button>
+
+      <div class="linker-geo" id="linker-geo">
+        <div class="geo-chip"><span class="geo-k">Length</span><span class="geo-v" id="geo-len">—</span></div>
+        <div class="geo-chip"><span class="geo-k">Rot. bonds</span><span class="geo-v" id="geo-rot">—</span></div>
+        <div class="geo-chip"><span class="geo-k">Rigidity</span><span class="geo-v" id="geo-rig">—</span></div>
+      </div>
+
+      <div class="smiles-box">
+        <div class="smiles-head">
+          <span id="smiles-title">Assembled SMILES</span>
+          <div class="smiles-actions">
+            <button id="download" class="copy-btn" title="Download 3D structure as SDF">SDF ↓</button>
+            <button id="upload-btn" class="copy-btn" title="Upload a MOL/SDF to score">Upload ↑</button>
+            <button id="copy" class="copy-btn">Copy</button>
+          </div>
+        </div>
+        <code id="smiles" class="smiles">—</code>
+        <input type="file" id="upload-file" accept=".mol,.sdf" hidden>
+      </div>
+    </section>
+
+    <!-- CENTER: 3D viewer -->
+    <section class="panel viewer-panel">
+      <div class="viewer-toolbar">
+        <div class="vt-left"><span class="mw-pill" id="mw-pill">—</span></div>
+        <div class="vt-right">
+          <div class="seg" id="style-seg">
+            <button data-style="stick" class="active">Stick</button>
+            <button data-style="ball">Ball &amp; stick</button>
+            <button data-style="line">Line</button>
+          </div>
+        </div>
+      </div>
+      <div id="viewer" class="viewer">
+        <div class="viewer-loading" id="loading"><div class="spinner"></div><span>Assembling…</span></div>
+        <div class="viewer-hint" id="viewer-hint">drag to rotate · scroll to zoom</div>
+      </div>
+    </section>
+
+    <!-- RIGHT: metrics -->
+    <section class="panel metrics-panel">
+      <div class="index-block">
+        <svg class="gauge" viewBox="0 0 120 120">
+          <circle class="gauge-track" cx="60" cy="60" r="52"/>
+          <circle class="gauge-fill" id="gauge-fill" cx="60" cy="60" r="52"/>
+        </svg>
+        <div class="index-center">
+          <span class="index-val" id="index-val">—</span>
+          <span class="index-label">PROTAC‑likeness</span>
+        </div>
+      </div>
+      <div class="index-sub" id="index-sub">Tier‑1 physicochemical score (0–100)</div>
+
+      <div class="domain-gate" id="domain-gate"></div>
+
+      <div class="tip" id="tip">
+        <span class="tip-ico" aria-hidden="true">💡</span>
+        <div class="tip-body"><span class="tip-label">Tip</span><span id="tip-body"></span></div>
+      </div>
+
+      <h2 class="panel-h">Tier‑1 metrics</h2>
+      <div class="metrics" id="metrics"></div>
+
+      <p class="foot-note"><b>PROTAC‑likeness</b> = consistency with known-degrader physicochemical
+        space (calibrated to PROTAC‑DB). It is <b>not</b> validated developability or degradation
+        potency — DC₅₀ / D<sub>max</sub> / ternary geometry are Tier‑2 and not computed here.</p>
+    </section>
+  </main>
+
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <aside class="drawer" id="drawer" aria-label="Ranked candidates">
+    <div class="drawer-head">
+      <div>
+        <div class="drawer-title" id="drawer-title">Top candidates</div>
+        <div class="drawer-sub" id="drawer-sub"></div>
+      </div>
+      <button class="drawer-close" id="drawer-close" aria-label="Close">✕</button>
+    </div>
+    <div class="drawer-legend">Ranked by Tier‑1 score · shorter linkers rank higher (degradation needs
+      an optimal length — Tier‑2). Click any point or row to load it.</div>
+    <div class="drawer-scatter" id="drawer-scatter"></div>
+    <div class="drawer-list" id="drawer-list"></div>
+  </aside>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
